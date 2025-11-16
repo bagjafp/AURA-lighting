@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AURA - Lighting Control</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', 'Open Sans', 'Lato', sans-serif;
+            background-color: #0f172a;
+            color: #e2e8f0;
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: #1e293b;
+            border-bottom: 2px solid #334155;
+            padding: 1.5rem 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .header-title h1 {
+            font-size: 2rem;
+            color: #60a5fa;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.25rem;
+        }
+
+        .header-title p {
+            font-size: 0.9rem;
+            color: #94a3b8;
+            font-style: italic;
+        }
+
+        nav {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: #cbd5e1;
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: color 0.3s;
+        }
+
+        nav a:hover, nav a.active {
+            color: #60a5fa;
+        }
+
+        main {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .page-header {
+            margin-bottom: 2rem;
+        }
+
+        .page-header h2 {
+            font-size: 1.75rem;
+            color: #60a5fa;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-header p {
+            color: #94a3b8;
+            font-size: 1rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card {
+            background-color: #1e293b;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+            border: 1px solid #334155;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            color: #60a5fa;
+            border-bottom: 2px solid #334155;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .zone-item {
+            margin-bottom: 1.5rem;
+            padding: 1.5rem;
+            background-color: #0f172a;
+            border-radius: 8px;
+            border: 1px solid #334155;
+        }
+
+        .zone-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .zone-name {
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        .zone-location {
+            font-size: 0.85rem;
+            color: #94a3b8;
+            margin-top: 0.25rem;
+        }
+
+        .toggle-button {
+            padding: 0.5rem 1.25rem;
+            border: none;
+            border-radius: 6px;
+            color: white;
+            cursor: pointer;
+            font-family: 'Roboto', sans-serif;
+            font-size: 0.875rem;
+            transition: opacity 0.3s;
+            font-weight: 500;
+        }
+
+        .toggle-button:hover {
+            opacity: 0.9;
+        }
+
+        .toggle-button.on {
+            background-color: #10b981;
+        }
+
+        .toggle-button.off {
+            background-color: #6b7280;
+        }
+
+        .slider-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .slider-label {
+            font-size: 0.875rem;
+            color: #94a3b8;
+        }
+
+        .slider {
+            width: 100%;
+            height: 8px;
+            border-radius: 4px;
+            outline: none;
+            cursor: pointer;
+            -webkit-appearance: none;
+            background: #334155;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #60a5fa;
+            cursor: pointer;
+        }
+
+        .slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #60a5fa;
+            cursor: pointer;
+            border: none;
+        }
+
+        .zone-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #334155;
+        }
+
+        .stat {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: #94a3b8;
+        }
+
+        .stat-value {
+            font-size: 1rem;
+            color: #60a5fa;
+            font-weight: 500;
+        }
+
+        .status {
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+            color: #10b981;
+            text-align: center;
+            padding: 0.75rem;
+            background-color: #0f172a;
+            border-radius: 6px;
+            border: 1px solid #10b981;
+        }
+
+        .schedule-card {
+            background-color: #0f172a;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .schedule-time {
+            font-size: 1rem;
+            color: #e2e8f0;
+            margin-bottom: 0.5rem;
+        }
+
+        .schedule-action {
+            font-size: 0.9rem;
+            color: #94a3b8;
+        }
+
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="header-title">
+                <h1>AURA Dashboard</h1>
+                <p>AI-driven Utility & Resource Automation</p>
+            </div>
+            <nav>
+                <a href="index.html">Overview</a>
+                <a href="lighting.html" class="active">Lighting</a>
+                <a href="hvac.html">HVAC</a>
+                <a href="energy.html">Energy</a>
+                <a href="alerts.html">Alerts</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="page-header">
+            <h2>💡 Smart Lighting Control (DALI)</h2>
+            <p>Manage and monitor all building lighting zones with precision control</p>
+        </div>
+
+        <div class="grid">
+            <!-- Zone 1 -->
+            <div class="card">
+                <h3 class="card-title">Office Wing A</h3>
+                <div class="zone-item">
+                    <div class="zone-header">
+                        <div>
+                            <div class="zone-name">Main Workspace</div>
+                            <div class="zone-location">Building 1, Floor 2-4</div>
+                        </div>
+                        <button class="toggle-button on" onclick="toggleLight(0)">ON</button>
+                    </div>
+                    <div class="slider-container">
+                        <label class="slider-label">Brightness: <span id="brightness-0">75</span>%</label>
+                        <input type="range" class="slider" min="0" max="100" value="75" oninput="updateBrightness(0, this.value)">
+                    </div>
+                    <div class="zone-stats">
+                        <div class="stat">
+                            <span class="stat-label">Power Draw</span>
+                            <span class="stat-value">2.8 kW</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">Fixtures</span>
+                            <span class="stat-value">120 units</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">Temperature</span>
+                            <span class="stat-value">4000K</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">Efficiency</span>
+                            <span class="stat-value">94%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Zone 2 -->
+            <div class="card">
+                <h3 class="card-title">Lobby</h3>
+                <div class="zone-item">
+                    <div class="zone-header">
+                        <div>
+                            <div class="zone-name">Main Entrance</div>
+                            <div class="zone-location">Building 1, Ground Floor</div>
+                        </div>
+                        <button class="toggle-button on" onclick="toggleLight(1)">ON</button>
+                    </div>
+                    <div class="slider-container">
+                        <label class="slider-label">Brightness: <span id="brightness-1">100</span>%</label>
+                        <input type="range" class="slider" min="0" max="100" value="100" oninput="updateBrightness(1, this.value)">
+                    </div>
+                    <div class="zone-stats">
+                        <div class="stat">
+                            <span class="stat-label">Power Draw</span>
+                            <span class="stat-value">1.5 kW</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">Fixtures</span>
+                            <span class="stat-value">45 units</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">Temperature</span>
+                            <span class="stat-value">3000K</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">Efficiency</span>
+                            <span class="stat-value">98%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Zone 3 -->
+            <div class="card">
+                <h3 class="card-title">Floor 5</h3>
+                <div class="zone-item">
+                    <div class="zone-header">
+                        <div>
+                            <div class="zone-name">Executive Offices</div>
+                            <div class="zone-location">Building 1, Floor 5</div>
+                        </div>
+                        <button class="toggle-button off" onclick="toggleLight(2)">OFF</button>
+                    </div>
+                    <div class="slider-container">
+                        <label class="slider-label">Brightness: <span id="brightness-2">0</span>%</label>
+                        <input type="range" class="slider" min="0" max="100" value="0" oninput="updateBrightness(2, this.value)">
+                    </div>
+                    <div class="zone-stats">
+                        <div class="stat">
+                            <span class="stat-label">Power Draw</span>
+                            <span class="stat-value">0 kW</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">Fixtures</span>
+                            <span class="stat-value">60 units</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">Temperature</span>
+                            <span class="stat-value">3500K</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">Efficiency</span>
+                            <span class="stat-value">N/A</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Zone 4 -->
+            <div class="card">
+                <h3 class="card-title">Conference Rooms</h3>
+                <div class="zone-item">
+                    <div class="zone-header">
+                        <div>
+                            <div class="zone-name">Meeting Spaces</div>
+                            <div class="zone-location">Building 1, Floor 3</div>
+                        </div>
+                        <button class="toggle-button on" onclick="toggleLight(3)">ON</button>
+                    </div>
+                    <div class="slider-container">
+                        <label class="slider-label">Brightness: <span id="brightness-3">60</span>%</label>
+                        <input type="range" class="slider" min="0" max="100" value="60" oninput="updateBrightness(3, this.value)">
+                    </div>
+                    <div class="zone-stats">
+                        <div class="stat">
+                            <span class="stat-label">Power Draw</span>
+                            <span class="stat-value">1.2 kW</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">Fixtures</span>
+                            <span class="stat-value">35 units</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">Temperature</span>
+                            <span class="stat-value">4500K</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">Efficiency</span>
+                            <span class="stat-value">96%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Scheduled Events -->
+            <div class="card">
+                <h3 class="card-title">📅 Today's Schedule</h3>
+                <div class="schedule-card">
+                    <div class="schedule-time">18:00 - Auto Dim</div>
+                    <div class="schedule-action">Reduce all zones to 50% brightness</div>
+                </div>
+                <div class="schedule-card">
+                    <div class="schedule-time">22:00 - Night Mode</div>
+                    <div class="schedule-action">Turn off non-essential zones</div>
+                </div>
+                <div class="schedule-card">
+                    <div class="schedule-time">06:00 - Morning Activation</div>
+                    <div class="schedule-action">Gradual increase to 75% brightness</div>
+                </div>
+            </div>
+
+            <!-- System Status -->
+            <div class="card">
+                <h3 class="card-title">🔧 System Status</h3>
+                <div class="status">✅ DALI Gateway Connected</div>
+                <div class="status">✅ All Ballasts Responsive</div>
+                <div class="status">✅ Emergency Lighting: Armed</div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const lightingZones = [
+            { on: true, brightness: 75 },
+            { on: true, brightness: 100 },
+            { on: false, brightness: 0 },
+            { on: true, brightness: 60 }
+        ];
+
+        function toggleLight(index) {
+            const zone = lightingZones[index];
+            zone.on = !zone.on;
+            
+            const buttons = document.querySelectorAll('.toggle-button');
+            const button = buttons[index];
+            
+            if (zone.on) {
+                button.classList.remove('off');
+                button.classList.add('on');
+                button.textContent = 'ON';
+                zone.brightness = 75;
+            } else {
+                button.classList.remove('on');
+                button.classList.add('off');
+                button.textContent = 'OFF';
+                zone.brightness = 0;
+            }
+            
+            const sliders = document.querySelectorAll('.slider');
+            sliders[index].value = zone.brightness;
+            document.getElementById(`brightness-${index}`).textContent = zone.brightness;
+        }
+
+        function updateBrightness(index, value) {
+            const zone = lightingZones[index];
+            zone.brightness = parseInt(value);
+            
+            document.getElementById(`brightness-${index}`).textContent = value;
+            
+            const buttons = document.querySelectorAll('.toggle-button');
+            const button = buttons[index];
+            
+            if (parseInt(value) > 0 && !zone.on) {
+                zone.on = true;
+                button.classList.remove('off');
+                button.classList.add('on');
+                button.textContent = 'ON';
+            } else if (parseInt(value) === 0 && zone.on) {
+                zone.on = false;
+                button.classList.remove('on');
+                button.classList.add('off');
+                button.textContent = 'OFF';
+            }
+        }
+    </script>
+</body>
+</html>
