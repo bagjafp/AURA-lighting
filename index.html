@@ -284,9 +284,43 @@
         </div>
 
         <div class="grid">
+
+            <div class="card">
+                <h3 class="card-title">Lobby</h3>
+                <div class="zone-item">
+                    <div class="zone-header">
+                        <div>
+                            <div class="zone-name">Main Entrance</div>
+                        </div>
+                        <button class="toggle-button on" onclick="toggleLight(1)">ON</button>
+                    </div>
+                    <div class="slider-container">
+                        <label class="slider-label">Brightness: <span id="brightness-1">100</span>%</label>
+                        <input type="range" class="slider" min="0" max="100" value="100" oninput="updateBrightness(1, this.value)">
+                    </div>
+                    <div class="zone-stats">
+                        <div class="stat">
+                            <span class="stat-label">Power Draw</span>
+                            <span class="stat-value">1.5 kW</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">Fixtures</span>
+                            <span class="stat-value">45 units</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">Temperature</span>
+                            <span class="stat-value">3000K</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">Efficiency</span>
+                            <span class="stat-value">98%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <!-- Zone 1 -->
             <div class="card">
-                <h3 class="card-title">Office Wing A</h3>
+                <h3 class="card-title">Corridor</h3>
                 <div class="zone-item">
                     <div class="zone-header">
                         <div>
